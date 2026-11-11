@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A Universe Called Harini</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070b1f;--bg2:#1a1040;--ink:#ece8ff;--mut:#b9aee0;--lav:#a995e8;--pink:#ffb6d5;--glow:rgba(190,160,255,.35);
+--serif:'Cormorant Garamond',Georgia,serif;--hand:'Caveat','Segoe Script',cursive;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*,*:before,*:after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(ellipse at 30% 20%,#2a1659 0%,transparent 55%),radial-gradient(ellipse at 80% 80%,#3a1740 0%,transparent 50%),var(--bg);color:var(--ink);font-family:var(--serif);font-size:19px;overflow-x:hidden}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+canvas#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.planet{position:fixed;border-radius:50%;z-index:0;animation:drift 18s ease-in-out infinite alternate;pointer-events:none}
+.p1{width:90px;height:90px;top:12%;right:8%;background:radial-gradient(circle at 30% 30%,#e6b9ff,#6b3fb0 60%,#2a1459);box-shadow:0 0 40px var(--glow)}
+.p2{width:46px;height:46px;bottom:14%;left:7%;background:radial-gradient(circle at 35% 30%,#fff,#f4b6d2 45%,#8a4a7a);animation-delay:-6s;box-shadow:0 0 30px rgba(255,182,213,.3)}
+@keyframes drift{to{transform:translate(-18px,22px)}}
+.stage{position:relative;z-index:1;min-height:100%;display:none;flex-direction:column;align-items:center;justify-content:center;padding:28px 18px;text-align:center}
+.stage.on{display:flex;animation:in 1s ease both}
+.stage.out{animation:out .8s ease both}
+@keyframes in{from{opacity:0;transform:scale(1.04);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+@keyframes out{to{opacity:0;transform:scale(.96);filter:blur(8px)}}
+h1,h2{font-weight:400;margin:0;line-height:1.15}
+h1{font-size:clamp(30px,7vw,52px);font-style:italic}
+h2{font-size:clamp(28px,6vw,44px)}
+.sub{color:var(--mut);margin:12px 0 26px;font-size:1.05em}
+.panel{width:min(400px,100%);padding:28px 24px;border-radius:22px;background:rgba(20,14,56,.6);border:1px solid rgba(169,149,232,.4);box-shadow:0 0 60px var(--glow),inset 0 0 30px rgba(169,149,232,.08);backdrop-filter:blur(10px);text-align:left}
+.panel h3{margin:0 0 18px;font-weight:600;letter-spacing:.14em;text-align:center;font-size:.9em;color:var(--lav)}
+label{display:block;margin:14px 0 6px;color:var(--mut);font-size:.95em}
+input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(169,149,232,.45);background:rgba(7,11,31,.7);color:var(--ink);font:inherit;font-size:17px}
+input:focus,.btn:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.btn{margin-top:22px;padding:14px 26px;border:0;border-radius:999px;cursor:pointer;font:600 16px var(--serif);letter-spacing:.1em;color:#1a0f3a;background:linear-gradient(135deg,#d9c8ff,var(--pink));box-shadow:0 0 28px var(--glow);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(255,182,213,.5)}
+.btn.full{width:100%}
+.msg{min-height:1.4em;margin-top:14px;text-align:center;color:var(--pink)}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+#monkey{display:none;margin:10px auto 0;width:150px;animation:bob 1.1s ease-in-out infinite}
+#monkey.show{display:block}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-4deg)}}
+.tear{animation:tear 1.3s ease-in infinite;transform-box:fill-box}
+.tear.b{animation-delay:.6s}
+@keyframes tear{0%{opacity:0;transform:translateY(0)}20%{opacity:1}100%{opacity:0;transform:translateY(34px)}}
+.ok{font-size:1.3em;color:var(--pink)}
+/* envelope */
+.env{position:relative;width:min(280px,76vw);height:180px;margin:26px auto 8px;animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-12px)}}
+.env .body{position:absolute;inset:0;border-radius:10px;background:linear-gradient(160deg,#cdb9ff,#9a7fe0);box-shadow:0 0 50px var(--glow)}
+.env .flap{position:absolute;left:0;right:0;top:0;height:100px;background:linear-gradient(#e2d4ff,#b59cf0);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .8s ease;border-radius:10px 10px 0 0}
+.env .seal{position:absolute;left:50%;top:84px;transform:translateX(-50%);font-size:26px;color:#a0366b}
+.env.open{animation:none}.env.open .flap{transform:rotateX(180deg)}.env.open .seal{opacity:0}
+.letter{width:min(560px,100%);padding:34px 28px;border-radius:14px;text-align:left;color:#3a2a5c;background:#fbf6ff;box-shadow:0 0 70px var(--glow);margin:8px 0}
+.letter h2{font-family:var(--hand);font-weight:700;font-size:clamp(32px,7vw,42px);color:#7a3d9a}
+.letter .s{font-family:var(--hand);font-size:22px;color:#8d6aa8;margin:4px 0 20px}
+.letter p{margin:0 0 14px;line-height:1.65;opacity:0;transform:translateY(8px);transition:opacity 1s,transform 1s}
+.letter p.v{opacity:1;transform:none}
+.letter .sig{font-family:var(--hand);font-size:26px;color:#7a3d9a}
+#next1{opacity:0;transition:opacity 1s;margin-top:10px}#next1.v{opacity:1}
+.burst{position:fixed;left:50%;top:50%;width:20px;height:20px;border-radius:50%;z-index:5;pointer-events:none;background:radial-gradient(circle,#fff,var(--pink) 40%,transparent 70%);animation:burst 1.1s ease-out forwards}
+@keyframes burst{to{transform:translate(-50%,-50%) scale(120);opacity:0}}
+/* cake */
+.cakewrap{width:min(330px,86vw);margin:6px auto 0}
+.flame{transform-box:fill-box;transform-origin:50% 100%;animation:flick .35s ease-in-out infinite alternate;transition:opacity .5s,transform .5s}
+.flame.d2{animation-delay:.12s}.flame.d3{animation-delay:.22s}
+@keyframes flick{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.88,1.12) rotate(3deg)}}
+.out .flame,.cakewrap.blown .flame{opacity:0;transform:scale(.2)}
+.smoke{opacity:0;fill:none;stroke:#d8d0f0;stroke-width:3;stroke-linecap:round}
+.blown .smoke{animation:smoke 2.6s ease-out forwards}
+.blown .smoke:nth-of-type(2){animation-delay:.2s}.blown .smoke:nth-of-type(3){animation-delay:.4s}
+@keyframes smoke{0%{opacity:.8;transform:translateY(0)}100%{opacity:0;transform:translateY(-50px)}}
+.hide{display:none!important}
+#final h1{font-style:normal;font-size:clamp(36px,9vw,70px);background:linear-gradient(90deg,#d9c8ff,var(--pink),#d9c8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+#confetti{position:fixed;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.date{font-family:var(--hand);font-size:34px;color:var(--pink);margin:10px 0}
+.fin{max-width:34ch;color:var(--mut);margin:6px auto 0}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas><div class="planet p1"></div><div class="planet p2"></div>
+
+<!-- STAGE 1 -->
+<section class="stage on" id="s1">
+  <h1>Somewhere in this universe...</h1>
+  <p class="sub">Someone has prepared something special for you.</p>
+  <div class="panel" id="panel">
+    <h3>IDENTITY VERIFICATION</h3>
+    <label for="u">Your Name</label>
+    <input id="u" placeholder="Enter your name..." autocomplete="off">
+    <label for="p">Your Birthday</label>
+    <input id="p" type="password" placeholder="Enter your secret birthday..." autocomplete="off" inputmode="numeric">
+    <button class="btn full" id="go" type="button">UNLOCK YOUR UNIVERSE ✦</button>
+    <div class="msg" id="msg" role="alert"></div>
+    <svg id="monkey" viewBox="0 0 150 160" aria-label="A crying monkey">
+      <circle cx="28" cy="62" r="20" fill="#8a5a3c"/><circle cx="28" cy="62" r="11" fill="#e9b99a"/>
+      <circle cx="122" cy="62" r="20" fill="#8a5a3c"/><circle cx="122" cy="62" r="11" fill="#e9b99a"/>
+      <ellipse cx="75" cy="72" rx="52" ry="55" fill="#8a5a3c"/>
+      <ellipse cx="75" cy="86" rx="38" ry="34" fill="#f0c9ab"/>
+      <path d="M50 52q8-14 25-4q17-10 25 4q-8 16-25 8q-17 8-25-8z" fill="#f0c9ab"/>
+      <path d="M52 58q6 6 13 0M85 58q6 6 13 0" stroke="#3a2214" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M48 46l14 5M102 46l-14 5" stroke="#3a2214" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="68" cy="82" rx="3" ry="2.2" fill="#3a2214"/><ellipse cx="82" cy="82" rx="3" ry="2.2" fill="#3a2214"/>
+      <ellipse cx="75" cy="106" rx="12" ry="8" fill="#6b2b3a"/><path d="M63 104q12-9 24 0" stroke="#3a2214" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path class="tear" d="M58 64q-5 9 0 12q5-3 0-12z" fill="#7fd0ff"/><path class="tear b" d="M92 64q-5 9 0 12q5-3 0-12z" fill="#7fd0ff"/>
+      <path class="tear b" d="M52 64q-4 8 0 10q4-2 0-10z" fill="#9adfff"/><path class="tear" d="M98 64q-4 8 0 10q4-2 0-10z" fill="#9adfff"/>
+    </svg>
+  </div>
+</section>
+
+<!-- STAGE 2 -->
+<section class="stage" id="s2">
+  <div id="envBox">
+    <h2>A Little Letter For You</h2>
+    <div class="env" id="env"><div class="body"></div><div class="flap"></div><div class="seal">♡</div></div>
+    <button class="btn" id="open" type="button">OPEN YOUR LETTER</button>
+  </div>
+  <div class="letter hide" id="letter">
+    <h2>To My Dearest Harini ♡</h2>
+    <div class="s">A little letter from someone who is lucky to have you.</div>
+    <p>My dear Harini,</p>
+    <p>In this enormous universe, among billions of stars and countless galaxies, I’m genuinely glad that our paths crossed.</p>
+    <p>You might be just one person in this universe, but you hold a very special place in my little world.</p>
+    <p>I hope this new chapter of your life brings you beautiful memories, unexpected happiness, endless laughter and all the little things your heart wishes for.</p>
+    <p>Never forget how special you are. Even on the days when you don’t feel it, I hope you remember that someone out here is always wishing the very best for you.</p>
+    <p>If I could make one wish for you, it would be that life treats your heart gently and gives you a thousand reasons to smile.</p>
+    <p>Stay the lovely person you are. The universe is a little more beautiful with you in it.</p>
+    <p class="sig">With lots of love ♡</p>
+  </div>
+  <div id="next1"><p class="sub" style="margin-bottom:0">READY FOR YOUR NEXT SURPRISE?</p><button class="btn" id="go2" type="button">LET’S GO ✨</button></div>
+</section>
+
+<!-- STAGE 3 -->
+<section class="stage" id="s3">
+  <h2>MAKE A WISH, HARINI!</h2>
+  <p class="sub">Close your eyes, make a little wish, and get ready...</p>
+  <div class="cakewrap" id="cake">
+    <svg viewBox="0 0 300 280" role="img" aria-label="Birthday cake with lit candles">
+      <defs>
+        <linearGradient id="t1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b78ae6"/><stop offset=".5" stop-color="#d6b6f5"/><stop offset="1" stop-color="#9a6fd0"/></linearGradient>
+        <linearGradient id="t2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f09bc0"/><stop offset=".5" stop-color="#ffc4dc"/><stop offset="1" stop-color="#d77fa8"/></linearGradient>
+        <radialGradient id="fl" cx=".5" cy=".7"><stop offset="0" stop-color="#fff6c0"/><stop offset=".6" stop-color="#ffc24a"/><stop offset="1" stop-color="#ff7a3a"/></radialGradient>
+      </defs>
+      <ellipse cx="150" cy="262" rx="130" ry="14" fill="#2a1a5c"/><ellipse cx="150" cy="258" rx="120" ry="11" fill="#4a3a8a"/>
+      <rect x="40" y="188" width="220" height="68" rx="10" fill="url(#t1)"/>
+      <path d="M40 198q18 22 36 0q18 22 36 0q18 22 36 0q18 22 36 0q18 22 36 0q18 22 36 0v-10H40z" fill="#fff0fa"/>
+      <rect x="70" y="128" width="160" height="62" rx="10" fill="url(#t2)"/>
+      <path d="M70 138q16 20 32 0q16 20 32 0q16 20 32 0q16 20 32 0q16 20 32 0v-10H70z" fill="#fff0fa"/>
+      <g fill="#ffe9a8"><circle cx="80" cy="230" r="3"/><circle cx="150" cy="240" r="3"/><circle cx="215" cy="228" r="3"/><circle cx="112" cy="168" r="2.5"/><circle cx="190" cy="170" r="2.5"/></g>
+      <g id="candles"></g>
+      <path class="smoke" d="M110 100q-8-14 0-26q8-12 0-24"/><path class="smoke" d="M150 96q8-14 0-26q-8-12 0-24"/><path class="smoke" d="M190 100q-8-14 0-26q8-12 0-24"/>
+    </svg>
+  </div>
+  <p class="sub" id="hint" style="margin:8px 0 0">Tap the button below to blow out your candles!</p>
+  <button class="btn" id="blow" type="button">BLOW THE CANDLES ✨</button>
+  <button class="btn hide" id="go3" type="button">ONE LAST SURPRISE ✦</button>
+</section>
+
+<!-- STAGE 4 -->
+<section class="stage" id="s4">
+  <h1 id="fh">Happy Birthday, Harini!</h1>
+  <div class="date">11 · 11</div>
+  <p class="fin">Your wish is out in the universe now. May it find its way back to you, wrapped in a thousand reasons to smile.</p>
+  <button class="btn" id="again" type="button">REPLAY THE JOURNEY ✦</button>
+</section>
+<canvas id="confetti"></canvas>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---- sky ---- */
+var c=$('sky'),x=c.getContext('2d'),W,H,stars=[],shoot=null;
+function size(){W=c.width=innerWidth;H=c.height=innerHeight;stars=[];for(var i=0;i<Math.min(170,W*H/6000);i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+.3,p:Math.random()*6.28,s:Math.random()*.02+.005})}
+addEventListener('resize',size);size();
+(function loop(t){x.clearRect(0,0,W,H);
+ stars.forEach(function(s){s.p+=s.s;x.globalAlpha=.4+.6*Math.abs(Math.sin(s.p));x.fillStyle='#fff';x.beginPath();x.arc(s.x,s.y,s.r,0,6.28);x.fill()});
+ if(!shoot&&!reduce&&Math.random()<.004)shoot={x:Math.random()*W*.8,y:Math.random()*H*.4,l:0};
+ if(shoot){shoot.x+=9;shoot.y+=4;shoot.l++;var g=x.createLinearGradient(shoot.x,shoot.y,shoot.x-90,shoot.y-40);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(255,255,255,0)');x.globalAlpha=1;x.strokeStyle=g;x.lineWidth=2;x.beginPath();x.moveTo(shoot.x,shoot.y);x.lineTo(shoot.x-90,shoot.y-40);x.stroke();if(shoot.l>60)shoot=null}
+ requestAnimationFrame(loop)})();
+
+/* ---- stage switching ---- */
+function burst(){var b=document.createElement('div');b.className='burst';document.body.appendChild(b);setTimeout(function(){b.remove()},1200)}
+function go(from,to){
+ var f=$(from),n=$(to);burst();f.classList.add('out');
+ setTimeout(function(){f.classList.remove('on','out');n.classList.add('on');window.scrollTo(0,0);if(to==='s4')confetti()},800)}
+
+/* ---- stage 1 ---- */
+var msg=$('msg'),monkey=$('monkey'),panel=$('panel');
+function fail(text,withMonkey){
+ msg.innerHTML=text;panel.classList.remove('shake');void panel.offsetWidth;panel.classList.add('shake');
+ monkey.classList.toggle('show',withMonkey)}
+function login(){
+ var u=$('u').value.trim().toLowerCase(),p=$('p').value;
+ if(!u||!p){fail('Please enter both your name and your birthday.',false);return}
+ if(u!=='harini'){fail('Wait a minute! This universe is reserved for Harini.',false);return}
+ if(p!=='1111'){fail('NOOO! That’s not the secret! 🥺<br><span style="color:var(--mut)">Even the monkey knows you can do better. Try again!</span>',true);return}
+ monkey.classList.remove('show');
+ msg.innerHTML='<span class="ok">Access granted! Welcome to your little universe, Harini.</span>';
+ $('go').disabled=true;
+ setTimeout(function(){go('s1','s2')},1800)}
+$('go').onclick=login;
+['u','p'].forEach(function(i){$(i).addEventListener('keydown',function(e){if(e.key==='Enter')login()})});
+
+/* ---- stage 2 ---- */
+$('open').onclick=function(){
+ $('env').classList.add('open');this.disabled=true;
+ setTimeout(function(){
+  $('envBox').classList.add('hide');$('letter').classList.remove('hide');
+  var ps=document.querySelectorAll('.letter p');
+  ps.forEach(function(p,i){setTimeout(function(){p.classList.add('v')},400+i*900)});
+  setTimeout(function(){$('next1').classList.add('v')},400+ps.length*900);
+ },900)};
+$('go2').onclick=function(){go('s2','s3')};
+
+/* ---- stage 3 ---- */
+var cg=$('candles'),xs=[95,122,150,178,205],ys=[132,126,120,126,132],h='';
+xs.forEach(function(cx,i){var y=ys[i]+0;h+='<rect x="'+(cx-4)+'" y="'+(y-30)+'" width="8" height="'+(y-100+30)+'" rx="2" fill="'+(i%2?'#fff':'#ffd6ea')+'" transform="translate(0,'+(0)+')"/>'+
+ '<path class="flame d'+(i%3+1)+'" d="M'+cx+' '+(y-58)+'q9 14 0 24q-9-10 0-24z" fill="url(#fl)" style="filter:drop-shadow(0 0 6px #ffc24a)"/>'});
+cg.innerHTML=h;
+$('blow').onclick=function(){
+ $('cake').classList.add('blown');this.classList.add('hide');
+ $('hint').textContent='Your wish is on its way to the stars ✨';
+ setTimeout(function(){$('go3').classList.remove('hide')},1800)};
+$('go3').onclick=function(){go('s3','s4')};
+
+/* ---- stage 4 ---- */
+var cv=$('confetti'),cx=cv.getContext('2d'),parts=[],run=false;
+function confetti(){
+ cv.width=innerWidth;cv.height=innerHeight;parts=[];
+ var cols=['#d9c8ff','#ffb6d5','#fff3b0','#a995e8','#fff'];
+ for(var i=0;i<(reduce?40:140);i++)parts.push({x:Math.random()*cv.width,y:-Math.random()*cv.height,w:6+Math.random()*6,v:1.5+Math.random()*3,a:Math.random()*6,s:Math.random()*.1,c:cols[i%5],t:Math.random()<.4});
+ if(run)return;run=true;
+ (function f(){cx.clearRect(0,0,cv.width,cv.height);
+  parts.forEach(function(p){p.y+=p.v;p.a+=p.s;p.x+=Math.sin(p.a);if(p.y>cv.height){p.y=-10;p.x=Math.random()*cv.width}
+   cx.fillStyle=p.c;cx.save();cx.translate(p.x,p.y);cx.rotate(p.a);
+   if(p.t){cx.beginPath();cx.arc(0,0,p.w/2,0,6.28);cx.fill()}else cx.fillRect(-p.w/2,-p.w/4,p.w,p.w/2);cx.restore()});
+  if($('s4').classList.contains('on')){requestAnimationFrame(f)}else{cx.clearRect(0,0,cv.width,cv.height);run=false}})()}
+$('again').onclick=function(){
+ $('u').value='';$('p').value='';msg.textContent='';$('go').disabled=false;
+ $('cake').classList.remove('blown');$('blow').classList.remove('hide');$('go3').classList.add('hide');
+ $('hint').textContent='Tap the button below to blow out your candles!';
+ $('env').classList.remove('open');$('open').disabled=false;$('envBox').classList.remove('hide');$('letter').classList.add('hide');
+ document.querySelectorAll('.letter p').forEach(function(p){p.classList.remove('v')});$('next1').classList.remove('v');
+ go('s4','s1')};
+})();
+</script>
+</body>
+</html>
